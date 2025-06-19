@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Date and Time</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <h1>Current Date and Time</h1>
+    <p th:text="${currentDateTime}">The current date and time will be displayed here.</p>
+    <a href="/">Back to Home</a>
+</body>
+</html>
