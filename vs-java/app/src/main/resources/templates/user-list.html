@@ -7,24 +7,48 @@
 </head>
 <body>
     <h1>User List</h1>
+    
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${success}"></span>
+    </div>
+    
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${error}"></span>
+    </div>
+    
     <table>
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="user : ${users}">
                 <td th:text="${user.id}"></td>
+                <td>
+                    <img th:if="${user.imagePath}" th:src="${user.imagePath}" alt="Profile Image" class="user-image">
+                    <div th:unless="${user.imagePath}" class="no-image">No Image</div>
+                </td>
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.email}"></td>
+                <td>
+                    <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-view">View</a>
+                    <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-edit">Edit</a>
+                    <a th:href="@{/users/{id}/delete(id=${user.id})}" class="btn btn-delete">Delete</a>
+                </td>
             </tr>
         </tbody>
     </table>
-    <a href="/users/new">Create New User</a>
-    <br>
-    <a href="/">Back to Home</a>
+    
+    <div class="actions">
+        <a href="/users/new" class="btn btn-primary">Create New User</a>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+    </div>
 </body>
 </html>

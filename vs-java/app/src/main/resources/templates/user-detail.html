@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <h1>User Details</h1>
+    
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${success}"></span>
+    </div>
+    
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${error}"></span>
+    </div>
+    
+    <div class="user-detail">
+        <div class="user-image-section">
+            <img th:if="${user.imagePath}" th:src="${user.imagePath}" alt="Profile Image" class="user-detail-image">
+            <div th:unless="${user.imagePath}" class="no-image-large">No Image</div>
+        </div>
+        
+        <div class="user-info">
+            <div class="info-row">
+                <label>ID:</label>
+                <span th:text="${user.id}"></span>
+            </div>
+            <div class="info-row">
+                <label>Name:</label>
+                <span th:text="${user.name}"></span>
+            </div>
+            <div class="info-row">
+                <label>Email:</label>
+                <span th:text="${user.email}"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-edit">Edit User</a>
+        <a th:href="@{/users/{id}/delete(id=${user.id})}" class="btn btn-delete">Delete User</a>
+        <a href="/users" class="btn btn-secondary">Back to List</a>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+    </div>
+</body>
+</html> 

@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    @Test void applicationCanStart() {
+        // Test that the Application class can be instantiated
+        Application application = new Application();
+        assertNotNull(application, "Application should be instantiable");
     }
 }

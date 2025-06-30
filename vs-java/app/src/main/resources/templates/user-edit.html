@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <h1>Edit User</h1>
+    
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${success}"></span>
+    </div>
+    
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${error}"></span>
+    </div>
+    
+    <form action="#" th:action="@{/users/{id}/edit(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
+        
+        <div class="current-image">
+            <label>Current Image:</label>
+            <div class="image-preview">
+                <img th:if="${user.imagePath}" th:src="${user.imagePath}" alt="Current Profile Image" class="user-image">
+                <div th:unless="${user.imagePath}" class="no-image">No Image</div>
+            </div>
+        </div>
+        
+        <div>
+            <label for="image">New Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <small style="color: #666; font-size: 12px;">Leave empty to keep current image</small>
+        </div>
+        
+        <div class="remove-image">
+            <label>
+                <input type="checkbox" name="removeImage" value="on">
+                Remove current image
+            </label>
+        </div>
+        
+        <div>
+            <button type="submit" class="btn btn-primary">Update User</button>
+        </div>
+    </form>
+    
+    <div class="actions">
+        <a th:href="@{/users/{id}(id=${user.id})}" class="btn btn-secondary">Cancel</a>
+        <a href="/users" class="btn btn-secondary">Back to List</a>
+    </div>
+</body>
+</html> 

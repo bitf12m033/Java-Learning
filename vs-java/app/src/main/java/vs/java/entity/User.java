@@ -12,6 +12,7 @@ public class User {
 
     private String name;
     private String email;
+    private String imagePath;
 
     // Getters and setters
     public Long getId() {
@@ -36,5 +37,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

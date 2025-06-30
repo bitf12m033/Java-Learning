@@ -13,19 +13,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v2/users")
+@RequestMapping("/api/v3/users")
 @CrossOrigin(origins = "*")
-public class EnhancedUserRestController {
+public class UserApiController {
 
     private final UserService userService;
 
-    public EnhancedUserRestController(UserService userService) {
+    public UserApiController(UserService userService) {
         this.userService = userService;
     }
 
     // ==================== CREATE OPERATIONS ====================
 
-    // POST /api/v2/users - Create new user with enhanced response (JSON)
+    // POST /api/v3/users - Create user with JSON data only
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<User>> createUser(@RequestBody User user) {
         try {
@@ -38,7 +38,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // POST /api/v2/users/with-image - Create user with image upload
+    // POST /api/v3/users/with-image - Create user with image upload
     @PostMapping(value = "/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<User>> createUserWithImage(
             @RequestParam("name") String name,
@@ -60,7 +60,7 @@ public class EnhancedUserRestController {
 
     // ==================== READ OPERATIONS ====================
 
-    // GET /api/v2/users - Get all users with enhanced response
+    // GET /api/v3/users - Get all users
     @GetMapping
     public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
         try {
@@ -73,7 +73,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // GET /api/v2/users/{id} - Get user by ID with enhanced response
+    // GET /api/v3/users/{id} - Get user by ID
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long id) {
         try {
@@ -91,7 +91,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // GET /api/v2/users/search?name={name} - Search users by name
+    // GET /api/v3/users/search?name={name} - Search users by name
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<User>>> searchUsersByName(@RequestParam String name) {
         try {
@@ -104,7 +104,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // GET /api/v2/users/count - Get total user count
+    // GET /api/v3/users/count - Get total user count
     @GetMapping("/count")
     public ResponseEntity<ApiResponse<Long>> getUserCount() {
         try {
@@ -119,7 +119,7 @@ public class EnhancedUserRestController {
 
     // ==================== UPDATE OPERATIONS ====================
 
-    // PUT /api/v2/users/{id} - Update existing user with enhanced response (JSON)
+    // PUT /api/v3/users/{id} - Update user with JSON data only
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable Long id, @RequestBody User user) {
         try {
@@ -139,7 +139,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // PUT /api/v2/users/{id}/with-image - Update user with image upload
+    // PUT /api/v3/users/{id}/with-image - Update user with image upload
     @PutMapping(value = "/{id}/with-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<User>> updateUserWithImage(
             @PathVariable Long id,
@@ -161,7 +161,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // PATCH /api/v2/users/{id} - Partial update
+    // PATCH /api/v3/users/{id} - Partial update
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<User>> partialUpdateUser(@PathVariable Long id, @RequestBody User userUpdates) {
         try {
@@ -192,7 +192,7 @@ public class EnhancedUserRestController {
 
     // ==================== DELETE OPERATIONS ====================
 
-    // DELETE /api/v2/users/{id} - Delete user with enhanced response
+    // DELETE /api/v3/users/{id} - Delete user
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         try {
@@ -211,7 +211,7 @@ public class EnhancedUserRestController {
         }
     }
 
-    // DELETE /api/v2/users - Delete all users (dangerous operation)
+    // DELETE /api/v3/users - Delete all users (dangerous operation)
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> deleteAllUsers() {
         try {
@@ -224,6 +224,43 @@ public class EnhancedUserRestController {
         } catch (Exception e) {
             ApiResponse<Void> response = ApiResponse.error("Failed to delete all users: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // ==================== BULK OPERATIONS ====================
+
+    // POST /api/v3/users/bulk - Create multiple users
+    @PostMapping(value = "/bulk", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<List<User>>> createBulkUsers(@RequestBody List<User> users) {
+        try {
+            List<User> savedUsers = users.stream()
+                    .map(userService::saveUser)
+                    .toList();
+            ApiResponse<List<User>> response = ApiResponse.success("Bulk users created successfully", savedUsers);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            ApiResponse<List<User>> response = ApiResponse.error("Failed to create bulk users: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    // PUT /api/v3/users/bulk - Update multiple users
+    @PutMapping(value = "/bulk", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<List<User>>> updateBulkUsers(@RequestBody List<User> users) {
+        try {
+            List<User> updatedUsers = users.stream()
+                    .map(user -> {
+                        if (user.getId() != null) {
+                            return userService.saveUser(user);
+                        }
+                        return user;
+                    })
+                    .toList();
+            ApiResponse<List<User>> response = ApiResponse.success("Bulk users updated successfully", updatedUsers);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            ApiResponse<List<User>> response = ApiResponse.error("Failed to update bulk users: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 } 

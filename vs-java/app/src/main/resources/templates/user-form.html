@@ -7,7 +7,18 @@
 </head>
 <body>
     <h1>Create New User</h1>
-    <form action="#" th:action="@{/users}" th:object="${user}" method="post">
+    
+    <!-- Success Message -->
+    <div th:if="${success}" class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${success}"></span>
+    </div>
+    
+    <!-- Error Message -->
+    <div th:if="${error}" class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+        <span th:text="${error}"></span>
+    </div>
+    
+    <form action="#" th:action="@{/users}" th:object="${user}" method="post" enctype="multipart/form-data">
         <div>
             <label for="name">Name:</label>
             <input type="text" id="name" th:field="*{name}" required>
@@ -15,6 +26,11 @@
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" th:field="*{email}" required>
+        </div>
+        <div>
+            <label for="image">Profile Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <small style="color: #666; font-size: 12px;">Supported formats: JPG, PNG, GIF (Max size: 10MB)</small>
         </div>
         <div>
             <button type="submit">Create User</button>

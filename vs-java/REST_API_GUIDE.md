@@ -49,6 +49,12 @@ This Spring Boot application demonstrates REST API development with:
 
 ## API Endpoints
 
+### Base URLs
+
+- **v1 API**: `http://localhost:8080/api/users`
+- **v2 API**: `http://localhost:8080/api/v2/users` (Enhanced with ApiResponse wrapper)
+- **v3 API**: `http://localhost:8080/api/v3/users` (Comprehensive with bulk operations)
+
 ### Basic API Endpoints (`/api`)
 
 | Method | Endpoint | Description | Response |
@@ -75,6 +81,10 @@ This Spring Boot application demonstrates REST API development with:
 ### Enhanced User API v2 (`/api/v2/users`)
 
 Same endpoints as v1 but with enhanced response format using `ApiResponse<T>` wrapper.
+
+### Comprehensive User API v3 (`/api/v3/users`)
+
+Same endpoints as v2 but with bulk operations and advanced features.
 
 ## Testing the APIs
 
@@ -154,16 +164,17 @@ Import these requests:
 
 ## Response Formats
 
-### Basic Response (v1)
+### Standard Response (v1)
 ```json
 {
   "id": 1,
   "name": "John Doe",
-  "email": "john@example.com"
+  "email": "john@example.com",
+  "imagePath": "/images/abc123.jpg"
 }
 ```
 
-### Enhanced Response (v2)
+### Enhanced Response (v2, v3)
 ```json
 {
   "success": true,
@@ -171,9 +182,9 @@ Import these requests:
   "data": {
     "id": 1,
     "name": "John Doe",
-    "email": "john@example.com"
-  },
-  "timestamp": "2024-01-15T14:30:00"
+    "email": "john@example.com",
+    "imagePath": "/images/abc123.jpg"
+  }
 }
 ```
 
