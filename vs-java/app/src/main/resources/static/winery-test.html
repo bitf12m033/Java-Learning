@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winery API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .api-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .api-section h3 {
+            color: #333;
+            margin-top: 0;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+            width: 200px;
+        }
+        .result {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .winery-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #fafafa;
+        }
+        .winery-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+        .winery-info {
+            color: #666;
+            margin: 5px 0;
+        }
+        .winery-description {
+            font-style: italic;
+            color: #555;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍷 Winery API Test</h1>
+        <p>Test the Winery API endpoints to fetch data from the live database.</p>
+    </div>
+
+    <div class="container">
+        <div class="api-section">
+            <h3>Get All Wineries</h3>
+            <button onclick="getAllWineries()">Fetch All Wineries</button>
+            <div id="allWineriesResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>Get Winery Count</h3>
+            <button onclick="getWineryCount()">Get Count</button>
+            <div id="countResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>Get Winery by ID</h3>
+            <input type="text" id="wineryId" placeholder="Enter Winery ID">
+            <button onclick="getWineryById()">Get Winery</button>
+            <div id="wineryByIdResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>Search Wineries by Name</h3>
+            <input type="text" id="searchName" placeholder="Enter winery name">
+            <button onclick="searchByName()">Search by Name</button>
+            <div id="searchByNameResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="api-section">
+            <h3>Search Wineries by Location</h3>
+            <input type="text" id="searchLocation" placeholder="Enter location">
+            <button onclick="searchByLocation()">Search by Location</button>
+            <div id="searchByLocationResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8081/api/wineries';
+
+        async function makeRequest(url, resultId) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                displayResult(resultId, data);
+            } catch (error) {
+                displayResult(resultId, `Error: ${error.message}`);
+            }
+        }
+
+        function displayResult(resultId, data) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.style.display = 'block';
+            
+            if (Array.isArray(data)) {
+                if (data.length === 0) {
+                    resultDiv.textContent = 'No wineries found.';
+                } else {
+                    resultDiv.innerHTML = data.map(winery => `
+                        <div class="winery-card">
+                            <div class="winery-name">${winery.wineryName || 'N/A'}</div>
+                            <div class="winery-info"><strong>ID:</strong> ${winery.wineryID}</div>
+                            <div class="winery-info"><strong>Abbreviation:</strong> ${winery.abbreviatedName || 'N/A'}</div>
+                            <div class="winery-info"><strong>Address:</strong> ${winery.address || 'N/A'}</div>
+                            <div class="winery-info"><strong>City:</strong> ${winery.city || 'N/A'}</div>
+                            <div class="winery-info"><strong>State:</strong> ${winery.state || 'N/A'}</div>
+                            <div class="winery-info"><strong>Zip Code:</strong> ${winery.zipCode || 'N/A'}</div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            }
+        }
+
+        function getAllWineries() {
+            makeRequest(API_BASE, 'allWineriesResult');
+        }
+
+        function getWineryCount() {
+            makeRequest(`${API_BASE}/count`, 'countResult');
+        }
+
+        function getWineryById() {
+            const id = document.getElementById('wineryId').value;
+            if (!id) {
+                alert('Please enter a winery ID');
+                return;
+            }
+            makeRequest(`${API_BASE}/${id}`, 'wineryByIdResult');
+        }
+
+        function searchByName() {
+            const name = document.getElementById('searchName').value;
+            if (!name) {
+                alert('Please enter a name to search');
+                return;
+            }
+            makeRequest(`${API_BASE}/search/name?name=${encodeURIComponent(name)}`, 'searchByNameResult');
+        }
+
+        function searchByLocation() {
+            const location = document.getElementById('searchLocation').value;
+            if (!location) {
+                alert('Please enter a location to search');
+                return;
+            }
+            makeRequest(`${API_BASE}/search/location?location=${encodeURIComponent(location)}`, 'searchByLocationResult');
+        }
+    </script>
+</body>
+</html> 
