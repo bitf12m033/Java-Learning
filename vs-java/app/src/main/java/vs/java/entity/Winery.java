@@ -1,82 +1,36 @@
 package vs.java.entity;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "Wineries")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Winery {
 
+    @Id
+    @Column(name = "wineryID")
     private String wineryID;
+    
+    @Column(name = "wineryName", nullable = false)
     private String wineryName;
+    
+    @Column(name = "abbreviatedName")
     private String abbreviatedName;
+    
+    @Column(name = "Address")
     private String Address;
+    
+    @Column(name = "City")
     private String City;
+    
+    @Column(name = "State")
     private String State;
+    
+    @Column(name = "ZipCode")
     private String ZipCode;
-
-    // Getters and setters
-    public String getWineryID() {
-        return wineryID;
-    }
-
-    public void setWineryID(String wineryID) {
-        this.wineryID = wineryID;
-    }
-
-    public String getWineryName() {
-        return wineryName;
-    }
-
-    public void setWineryName(String wineryName) {
-        this.wineryName = wineryName;
-    }
-
-    public String getAbbreviationName() {
-        return abbreviatedName;
-    }
-
-    public void setAbbreviatedName(String abbreviatedName) {
-        this.abbreviatedName = abbreviatedName;
-    }
-
-    public String getAddress() {
-        return Address;
-    }
-
-    public void setAddress(String Address) {
-        this.Address = Address;
-    }
-
-    public String getCity() {
-        return City;
-    }
-
-    public void setCity(String City) {
-        this.City = City;
-    }
-
-    public String getState() {
-        return State;
-    }
-
-    public void setState(String State) {
-        this.State = State;
-    }
-
-    public String getZipCode() {
-        return ZipCode;
-    }
-
-    public void setZipCode(String ZipCode) {
-        this.ZipCode = ZipCode;
-    }
-
-    @Override
-    public String toString() {
-        return "Winery{" +
-                "wineryID=" + wineryID +
-                ", wineryName='" + wineryName + '\'' +
-                ", abbreviatedName='" + abbreviatedName + '\'' +
-                ", Address='" + Address + '\'' +
-                ", City='" + City + '\'' +
-                ", State='" + State + '\'' +
-                ", ZipCode='" + ZipCode + '\'' +
-                '}';
-    }
 } 

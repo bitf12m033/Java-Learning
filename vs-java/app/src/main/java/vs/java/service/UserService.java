@@ -167,7 +167,7 @@ public class UserService {
     }
 
     public List<User> findUsersByNameContaining(String name) {
-        return userRepository.findByNameContainingIgnoreCase(name);
+        return userRepository.findByNameContainingIgnoreCaseOrderByName(name);
     }
 
     public long getUserCount() {

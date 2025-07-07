@@ -32,13 +32,13 @@ public class WineryService {
         if (name == null || name.trim().isEmpty()) {
             return getAllWineries();
         }
-        return wineryRepository.findByNameContainingIgnoreCase(name.trim());
+        return wineryRepository.findByWineryNameContainingIgnoreCase(name.trim());
     }
 
     public List<Winery> searchWineriesByLocation(String location) {
         if (location == null || location.trim().isEmpty()) {
             return getAllWineries();
         }
-        return wineryRepository.findByLocationContainingIgnoreCase(location.trim());
+        return wineryRepository.searchByLocation(location.trim());
     }
 } 
